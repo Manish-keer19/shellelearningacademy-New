@@ -1,0 +1,36 @@
+export const getStaticEvents = () => {
+  return [
+    {
+      id: 1,
+      title: "React Hooks Workshop",
+      date: "2023-12-15",
+      time: "10:00 AM - 1:00 PM",
+      mode: "Online",
+      description: "Deep dive into React Hooks and state management.",
+      price: "Free",
+      seatsLeft: 20,
+      agenda: ["Introduction to Hooks", "useState and useEffect", "Custom Hooks"],
+      speakers: [{ name: "John Doe", bio: "Senior Frontend Developer" }],
+      benefits: ["Learn advanced React patterns", "Improve your state management skills"],
+      whoCanAttend: ["React developers of all levels"],
+      venue: "Zoom",
+      refundPolicy: "N/A",
+    },
+    {
+      id: 2,
+      title: "Node.js Performance Tuning",
+      date: "2023-12-20",
+      time: "2:00 PM - 5:00 PM",
+      mode: "Offline",
+      description: "Learn how to optimize your Node.js applications for speed.",
+      price: "999",
+      seatsLeft: 15,
+      agenda: ["Event Loop Deep Dive", "Memory Management", "Clustering and Load Balancing"],
+      speakers: [{ name: "Jane Smith", bio: "Principal Engineer" }],
+      benefits: ["Write faster Node.js code", "Understand common performance bottlenecks"],
+      whoCanAttend: ["Experienced Node.js developers"],
+      venue: "123 Main St, New York, NY",
+      refundPolicy: "Full refund up to 7 days before the event.",
+    },
+  ];
+};

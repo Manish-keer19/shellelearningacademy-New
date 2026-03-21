@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Restored Green Theme */
+    --background: 95 25% 86%;
+    --foreground: 95 15% 15%;
+
+    --card: 95 20% 90%;
+    --card-foreground: 95 15% 15%;
+
+    --popover: 95 20% 90%;
+    --popover-foreground: 95 15% 15%;
+
+    /* Primary Brand Color (Green) */
+    --primary: 95 52% 31%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 95 52% 26%;
+
+    /* Secondary */
+    --secondary: 95 15% 80%;
+    --secondary-foreground: 95 15% 15%;
+
+    --muted: 95 15% 80%;
+    --muted-foreground: 95 10% 40%;
+
+    /* Accent */
+    --accent: 95 20% 75%;
+    --accent-foreground: 95 15% 15%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 95 15% 70%;
+    --input: 95 15% 70%;
+    --ring: 95 52% 31%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(95 52% 31%), hsl(110 45% 35%));
+    --gradient-hero: linear-gradient(180deg, hsl(95 25% 86%), hsl(95 20% 90%));
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsl(95 52% 20% / 0.1);
+    --shadow-md: 0 4px 16px hsl(95 52% 20% / 0.15);
+    --shadow-lg: 0 8px 32px hsl(95 52% 20% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* Heading Colors - Consistent across all pages */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-primary;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}

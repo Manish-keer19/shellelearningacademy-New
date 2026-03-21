@@ -1,0 +1,22 @@
+# Use official Node 18 Alpine image
+FROM node:18-alpine
+
+# Install dependencies for building native modules
+RUN apk add --no-cache python3 make g++ 
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json first (for caching)
+COPY package*.json ./
+
+# Force install to rebuild native modules for Linux
+RUN npm install --force
+
+# Copy rest of the app
+COPY . .
+
+# Expose backend port
+EXPOSE 3000
+
+# Start the server
+CMD ["npm", "start"]
