@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const formService = require("./form.service");
 const questionService = require("../questions/question.service");
@@ -5,8 +6,15 @@ const questionService = require("../questions/question.service");
 class FormController {
 	async createForm(req, res) {
 		try {
+			let baseSlug = req.body.title 
+				? req.body.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") 
+				: "form";
+			const randomSuffix = crypto.randomBytes(3).toString("hex");
+			const uniqueSlug = `${baseSlug}-${randomSuffix}`;
+
 			const formData = {
 				...req.body,
+				slug: uniqueSlug,
 				createdBy: req.user.id, // Assuming auth middleware adds user to req
 			};
 			const form = await formService.createForm(formData);

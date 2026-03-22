@@ -80,6 +80,8 @@ const FormResponses = () => {
     document.body.removeChild(link);
   };
 
+
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -167,43 +169,7 @@ const FormResponses = () => {
                               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{q.questionText}</p>
                               <p className="text-foreground font-medium">
                                 {ans ? (
-                                  q.questionType === 'file_upload' || q.questionType === 'file' || (typeof ans.value === 'string' && ans.value.startsWith('http')) ? (
-                                    <div className="flex gap-2 items-center">
-                                      <a 
-                                        href={ans.value} 
-                                        target="_blank" 
-                                        rel="noreferrer" 
-                                        className="text-primary hover:underline flex items-center gap-1 w-fit bg-primary/5 px-3 py-1 rounded-lg border border-primary/20 text-sm"
-                                      >
-                                        View File
-                                      </a>
-                                      <button 
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          let downUrl = ans.value;
-                                          // Add fl_attachment flag for cloudinary URLs to force download
-                                          if (downUrl.includes('cloudinary.com') && downUrl.includes('/upload/')) {
-                                              if (!downUrl.includes('fl_attachment')) {
-                                                const fileNameExp = downUrl.split('/').pop() || 'download';
-                                                downUrl = downUrl.replace('/upload/', `/upload/fl_attachment:${fileNameExp}/`);
-                                              }
-                                          }
-                                          const link = document.createElement('a');
-                                          link.href = downUrl;
-                                          link.setAttribute('download', ans.value.split('/').pop() || 'file');
-                                          link.setAttribute('target', '_blank');
-                                          document.body.appendChild(link);
-                                          link.click();
-                                          document.body.removeChild(link);
-                                        }}
-                                        className="text-primary hover:underline flex items-center gap-1 w-fit bg-primary/5 px-3 py-1 rounded-lg border border-primary/20 text-sm"
-                                      >
-                                        Download <Download className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    Array.isArray(ans.value) ? ans.value.join(', ') : String(ans.value)
-                                  )
+                                  Array.isArray(ans.value) ? ans.value.join(', ') : String(ans.value)
                                 ) : <span className="text-muted-foreground/30 italic">No answer</span>}
                               </p>
                             </div>

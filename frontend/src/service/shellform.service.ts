@@ -67,15 +67,4 @@ export const shellFormService = {
     const response = await axiosInstance.post(`${PUBLIC_FORM_API}/${slug}/submit`, { answers });
     return response.data;
   },
-
-  uploadFormFile: async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    const response = await axiosInstance.post(`${PUBLIC_FORM_API}/upload`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  },
 };

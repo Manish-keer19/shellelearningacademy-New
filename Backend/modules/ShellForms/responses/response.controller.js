@@ -85,25 +85,6 @@ class ResponseController {
 		}
 	}
 
-	async uploadFile(req, res) {
-		try {
-			if (!req.files || !req.files.file) {
-				return res.status(400).json({ success: false, message: "No file uploaded" });
-			}
-
-			const file = req.files.file;
-			const folder = process.env.FOLDER_NAME || "ShellForms";
-			const uploadDetails = await uploadFileToCloudinary(file, folder);
-
-			res.status(200).json({
-				success: true,
-				message: "File uploaded successfully",
-				url: uploadDetails.secure_url,
-			});
-		} catch (error) {
-			res.status(500).json({ success: false, message: error.message });
-		}
-	}
 }
 
 module.exports = new ResponseController();

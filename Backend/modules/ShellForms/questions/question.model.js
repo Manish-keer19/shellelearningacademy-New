@@ -24,7 +24,6 @@ const questionSchema = new mongoose.Schema(
 				"radio",
 				"checkbox",
 				"date",
-				"file_upload",
 				"rating",
 				"multiple_choice",
 				"paragraph",

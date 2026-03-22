@@ -55,22 +55,7 @@ const PublicForm = () => {
     }));
   };
 
-  const [uploadingFiles, setUploadingFiles] = useState<Record<string, boolean>>({});
 
-  const handleFileUpload = async (questionId: string, file: File) => {
-    if (!file) return;
-    
-    setUploadingFiles(prev => ({ ...prev, [questionId]: true }));
-    try {
-      const response = await shellFormService.uploadFormFile(file);
-      handleInputChange(questionId, response.url);
-      toast.success("File uploaded successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to upload file");
-    } finally {
-      setUploadingFiles(prev => ({ ...prev, [questionId]: false }));
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,62 +307,7 @@ const PublicForm = () => {
                         </div>
                       )}
 
-                      {/* File Upload */}
-                      {(question.questionType === 'file_upload' || question.questionType === 'file') && (
-                        <div className="space-y-4">
-                          {!responses[question._id] ? (
-                            <div className="relative">
-                              <input
-                                type="file"
-                                id={`file-${question._id}`}
-                                className="hidden"
-                                onChange={(e) => e.target.files && handleFileUpload(question._id, e.target.files[0])}
-                                disabled={uploadingFiles[question._id]}
-                              />
-                              <Label
-                                htmlFor={`file-${question._id}`}
-                                className={`flex flex-col items-center justify-center w-full p-8 border-2 border-dashed rounded-xl transition-all cursor-pointer ${uploadingFiles[question._id] ? 'bg-muted/50 border-muted-foreground/30 opacity-50' : 'bg-muted/10 border-border hover:bg-primary/5 hover:border-primary/50'}`}
-                              >
-                                {uploadingFiles[question._id] ? (
-                                  <>
-                                    <Loader2 className="w-8 h-8 text-primary animate-spin mb-3" />
-                                    <span className="text-sm font-medium animate-pulse">Uploading file...</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center mb-3">
-                                      <Upload className="w-5 h-5 text-primary opacity-70" />
-                                    </div>
-                                    <span className="text-sm font-semibold text-foreground/80">Click to upload document</span>
-                                    <span className="text-xs text-muted-foreground mt-1">Images, PDF or Documents</span>
-                                  </>
-                                )}
-                              </Label>
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-between p-4 bg-muted/20 border border-border rounded-xl">
-                              <div className="flex items-center gap-3">
-                                <FileCheck className="w-5 h-5 text-green-600" />
-                                <div className="max-w-[150px] md:max-w-xs overflow-hidden">
-                                  <p className="text-xs font-bold text-foreground truncate">File Attached Successfully</p>
-                                  <a href={responses[question._id]} target="_blank" rel="noreferrer" className="text-[10px] text-primary hover:underline block truncate opacity-80">
-                                    Click here to preview
-                                  </a>
-                                </div>
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleInputChange(question._id, '')}
-                                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0 rounded-full"
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      )}
+
                     </div>
                   </div>
                 </div>

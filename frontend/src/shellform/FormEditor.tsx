@@ -42,7 +42,6 @@ const QUESTION_TYPES = [
   { value: "radio", label: "Single Choice", icon: Settings2 },
   { value: "checkbox", label: "Multiple Choice", icon: CheckSquare },
   { value: "rating", label: "Rating", icon: Star },
-  { value: "file_upload", label: "File Upload", icon: FileUp },
 ];
 
 const FormEditor = () => {
@@ -56,23 +55,9 @@ const FormEditor = () => {
     description: "",
     status: "Draft",
     thankYouMessage: "Thank you for your response!",
-    slug: ""
   });
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const [manualSlug, setManualSlug] = useState(false);
-
-  useEffect(() => {
-    if (!id || id === 'create' || id === 'undefined') {
-      if (!manualSlug && formDetails.title) {
-        const generatedSlug = formDetails.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
-        setFormDetails(prev => ({ ...prev, slug: generatedSlug }));
-      }
-    }
-  }, [formDetails.title, manualSlug, id]);
 
   useEffect(() => {
     if (id && id !== 'create' && id !== 'undefined') {
@@ -84,9 +69,8 @@ const FormEditor = () => {
     setLoading(true);
     try {
       const response = await shellFormService.getFormById(id!);
-      const { title, description, status, thankYouMessage, slug, questions: fetchedQuestions } = response.data;
-      setFormDetails({ title, description, status, thankYouMessage, slug });
-      setManualSlug(true);
+      const { title, description, status, thankYouMessage, questions: fetchedQuestions } = response.data;
+      setFormDetails({ title, description, status, thankYouMessage });
       setQuestions(fetchedQuestions.sort((a: any, b: any) => a.order - b.order));
     } catch (error: any) {
       toast.error("Failed to load form data");
@@ -241,25 +225,6 @@ const FormEditor = () => {
                 placeholder="Form description (optional)"
                 className="w-full text-base bg-transparent border-none outline-none focus:ring-0 placeholder:text-muted-foreground/30 resize-none min-h-[40px] opacity-80"
               />
-              <div className="pt-2 flex items-center gap-2 border-t border-border/10">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest min-w-[60px]">URL Slug</span>
-                <div className="flex-grow flex items-center bg-secondary/20 px-3 py-1.5 rounded-lg border border-border/20 focus-within:border-primary/30 transition-all">
-                  <span className="text-xs text-muted-foreground opacity-50 select-none">/f/</span>
-                  <input 
-                    type="text"
-                    value={formDetails.slug}
-                    onChange={(e) => {
-                      setManualSlug(true);
-                      setFormDetails({...formDetails, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')});
-                    }}
-                    placeholder="form-url-slug"
-                    className="flex-grow bg-transparent border-none outline-none text-xs font-medium focus:ring-0 text-primary"
-                  />
-                  {!manualSlug && formDetails.title && (
-                    <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold animate-pulse">Auto-generated</span>
-                  )}
-                </div>
-              </div>
             </CardContent>
           </Card>
 
@@ -385,19 +350,6 @@ const FormEditor = () => {
                     onChange={(e) => setFormDetails({...formDetails, thankYouMessage: e.target.value})}
                     placeholder="Message shown after submission"
                   />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-1 block">Custom URL Slug</label>
-                  <div className="flex items-center">
-                    <span className="bg-muted px-3 py-2 border border-r-0 rounded-l-lg text-sm text-muted-foreground">{window.location.origin}/f/</span>
-                    <Input 
-                      value={formDetails.slug}
-                      onChange={(e) => setFormDetails({...formDetails, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
-                      placeholder="custom-link"
-                      className="rounded-l-none"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">Leave empty to auto-generate from title</p>
                 </div>
               </div>
             </CardContent>
