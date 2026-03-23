@@ -4,7 +4,7 @@ const responseController = require("./response.controller");
 const { auth, isAdmin } = require("../../../middlewares/auth");
 
 // Admin routes
-router.get("/form/:formId", auth, isAdmin, responseController.getResponses);
+router.get("/form/:formId", auth, responseController.getResponses);
 
 // Public route for form submission is handled in a separate public router usually
 // but we can put it here or as a separate file.

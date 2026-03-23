@@ -91,26 +91,26 @@ const FormResponses = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/5">
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10 flex flex-col overflow-x-hidden w-full">
       <Navbar />
       
-      <main className="container mx-auto px-4 pt-32 pb-20 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/admin/forms")}>
+      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20 max-w-7xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+          <div className="flex items-start sm:items-center gap-3 md:gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/admin/forms")} className="mt-1 sm:mt-0 flex-shrink-0">
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{form.title}</h1>
-              <p className="text-muted-foreground">{responses.length} responses collected</p>
+            <div className="flex-grow">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground break-words leading-tight">{form?.title}</h1>
+              <p className="text-sm md:text-base text-muted-foreground">{responses.length} responses collected</p>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={exportToCSV} variant="outline" className="flex items-center gap-2 border-primary text-primary hover:bg-primary/5">
+          {/* <div className="flex gap-2 w-full sm:w-auto">
+            <Button onClick={exportToCSV} variant="outline" className="w-full sm:w-auto flex items-center justify-center gap-2 border-primary text-primary hover:bg-primary/5">
               <Download className="w-4 h-4" />
               Download CSV
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {responses.length === 0 ? (
@@ -150,14 +150,14 @@ const FormResponses = () => {
                 >
                   <Card className="hover:shadow-md transition-shadow">
                     <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4 pb-4 border-b border-border/50">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-4 border-b border-border/50">
                         <div className="flex items-center gap-2 text-primary font-bold">
                           <User className="w-4 h-4" />
-                          Response #{responses.length - index}
+                          <span>Response #{responses.length - index}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Calendar className="w-3.5 h-3.5" />
-                          {new Date(sub.createdAt).toLocaleString()}
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-right">
+                          <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>{new Date(sub.createdAt).toLocaleString()}</span>
                         </div>
                       </div>
 

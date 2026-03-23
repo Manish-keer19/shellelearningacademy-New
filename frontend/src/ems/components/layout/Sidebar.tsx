@@ -7,6 +7,7 @@ import {
   GraduationCap,
   ChevronLeft,
   X,
+  FileCheck,
 } from "lucide-react";
 import { cn } from "@/ems/lib/utils";
 import { useSelector } from "react-redux";
@@ -34,6 +35,12 @@ const menuItems = [
     icon: DollarSign,
     label: "Targets & Commissions",
     path: "/ems/targets",
+    roles: ["Super Admin", "Manager"],
+  },
+  {
+    icon: FileCheck,
+    label: "ShellForms",
+    path: "/admin/forms",
     roles: ["Super Admin", "Manager"],
   },
 ];

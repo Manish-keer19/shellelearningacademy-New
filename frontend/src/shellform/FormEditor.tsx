@@ -183,76 +183,84 @@ const FormEditor = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/5">
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10 flex flex-col">
       <Navbar />
       
-      <div className="container mx-auto px-4 pt-32 pb-20 max-w-4xl">
-        <div className="flex items-center justify-between mb-8">
-          <Button variant="ghost" onClick={() => navigate("/admin/forms")} className="flex items-center gap-2">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20 max-w-4xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 md:mb-8">
+          <Button variant="ghost" onClick={() => navigate("/admin/forms")} className="flex items-center gap-2 w-fit -ml-2 sm:ml-0">
             <ArrowLeft className="w-4 h-4" /> Back to Forms
           </Button>
-          <div className="flex gap-4">
+          <div className="flex gap-2 sm:gap-4 w-full sm:w-auto">
              <select 
               value={formDetails.status}
               onChange={(e) => setFormDetails({...formDetails, status: e.target.value})}
-              className="px-4 py-2 rounded-lg bg-background border border-border outline-none text-sm font-medium"
+              className="px-3 md:px-4 py-2 rounded-lg bg-background border border-border outline-none text-sm font-medium w-full sm:w-auto flex-1 sm:flex-none cursor-pointer"
             >
               <option value="Draft">Draft</option>
               <option value="Published">Published</option>
               <option value="Closed">Closed</option>
             </select>
-            <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 flex items-center gap-2">
+            <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 w-full sm:w-auto flex-1 sm:flex-none">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Form
+              Save
             </Button>
           </div>
         </div>
 
         <div className="space-y-6">
           {/* Form Header Section */}
-          <Card className="border-t-8 border-t-primary shadow-xl overflow-hidden">
-            <CardContent className="p-6 md:p-8 space-y-4">
-              <input 
-                type="text"
-                value={formDetails.title}
-                onChange={(e) => setFormDetails({...formDetails, title: e.target.value})}
-                placeholder="Form Title"
-                className="w-full text-2xl md:text-3xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-muted-foreground/30 text-foreground"
-              />
-              <textarea 
-                value={formDetails.description}
-                onChange={(e) => setFormDetails({...formDetails, description: e.target.value})}
-                placeholder="Form description (optional)"
-                className="w-full text-base bg-transparent border-none outline-none focus:ring-0 placeholder:text-muted-foreground/30 resize-none min-h-[40px] opacity-80"
-              />
-            </CardContent>
-          </Card>
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="bg-card/90 backdrop-blur-sm border border-border/70 rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
+              <div className="h-2 md:h-3 bg-gradient-to-r from-primary to-green-500" />
+              <div className="p-5 sm:p-6 md:p-10 space-y-4">
+                <input 
+                  type="text"
+                  value={formDetails.title}
+                  onChange={(e) => setFormDetails({...formDetails, title: e.target.value})}
+                  placeholder="Form Title"
+                  className="w-full text-3xl md:text-4xl font-extrabold bg-transparent border-b border-transparent focus:border-border outline-none focus:ring-0 placeholder:text-muted-foreground text-foreground tracking-tight transition-all pb-2"
+                />
+                <textarea 
+                  value={formDetails.description}
+                  onChange={(e) => setFormDetails({...formDetails, description: e.target.value})}
+                  placeholder="Form description (optional)"
+                  className="w-full text-base md:text-lg bg-transparent border-b border-transparent focus:border-border outline-none focus:ring-0 placeholder:text-muted-foreground resize-none min-h-[60px] text-foreground leading-relaxed transition-all pb-2 pt-2"
+                />
+              </div>
+            </div>
+          </motion.div>
 
           {/* Questions Section */}
-          <Reorder.Group axis="y" values={questions} onReorder={setQuestions} className="space-y-4">
+          <Reorder.Group axis="y" values={questions} onReorder={setQuestions} className="space-y-6">
             {questions.map((question, index) => (
               <Reorder.Item key={question.id || question._id} value={question}>
-                <Card className="group relative border border-border/50 hover:border-primary/30 transition-all shadow-sm">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-transparent group-hover:bg-primary/50 transition-all" />
+                <div className="group relative bg-card/90 backdrop-blur-sm border border-border/70 hover:shadow-xl hover:-translate-y-1 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg transition-all duration-300">
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-transparent group-hover:bg-gradient-to-b group-hover:from-primary group-hover:to-green-500 transition-all rounded-l-2xl md:rounded-l-3xl" />
                   
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-2 cursor-grab active:cursor-grabbing text-muted-foreground/30">
+                  <div>
+                    <div className="flex items-start gap-2 sm:gap-4 cursor-default">
+                      <div className="mt-2 sm:mt-3 cursor-grab active:cursor-grabbing text-muted-foreground/30 p-1 hover:bg-muted rounded-md transition-colors hidden sm:block">
                         <GripVertical className="w-5 h-5" />
                       </div>
                       
-                      <div className="flex-grow space-y-4">
-                        <div className="flex flex-col md:flex-row gap-4">
-                          <Input 
-                            value={question.questionText}
-                            onChange={(e) => handleUpdateQuestion(index, { questionText: e.target.value })}
-                            placeholder="Question"
-                            className="text-base font-semibold bg-secondary/10 border-border/20 focus-visible:ring-1 focus-visible:ring-primary/30 h-10"
-                          />
+                      <div className="flex-grow space-y-4 w-full">
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
+                          <div className="flex items-center gap-2 w-full">
+                            <div className="sm:hidden cursor-grab active:cursor-grabbing text-muted-foreground/40">
+                              <GripVertical className="w-4 h-4" />
+                            </div>
+                            <Input 
+                              value={question.questionText}
+                              onChange={(e) => handleUpdateQuestion(index, { questionText: e.target.value })}
+                              placeholder="Question"
+                              className="text-base font-semibold bg-secondary/10 border-border/20 focus-visible:ring-1 focus-visible:ring-primary/30 h-10 w-full"
+                            />
+                          </div>
                           <select 
                             value={question.questionType}
                             onChange={(e) => handleUpdateQuestion(index, { questionType: e.target.value, options: (e.target.value === 'radio' || e.target.value === 'checkbox' || e.target.value === 'dropdown') ? [{label: 'Option 1', value: 'option_1'}] : [] })}
-                            className="md:w-48 px-4 py-2 rounded-lg bg-secondary/30 border-none outline-none text-sm font-medium focus:ring-1 focus:ring-primary/30"
+                            className="w-full sm:w-48 px-4 py-2 rounded-lg bg-secondary/30 border-none outline-none text-sm font-medium focus:ring-1 focus:ring-primary/30 min-h-[40px] cursor-pointer"
                           >
                             {QUESTION_TYPES.map(type => (
                               <option key={type.value} value={type.value}>{type.label}</option>
@@ -262,19 +270,19 @@ const FormEditor = () => {
 
                         {/* Options Section for multi-choice questions */}
                         {(question.questionType === 'radio' || question.questionType === 'checkbox' || question.questionType === 'dropdown') && (
-                          <div className="pl-4 space-y-3">
+                          <div className="pl-0 sm:pl-4 space-y-3">
                             {question.options?.map((option: any, oIndex: number) => (
-                              <div key={oIndex} className="flex items-center gap-2 group/option">
-                                {question.questionType === 'radio' ? <div className="w-4 h-4 rounded-full border border-muted-foreground/30" /> : <div className="w-4 h-4 rounded border border-muted-foreground/30" />}
+                              <div key={oIndex} className="flex items-center gap-2 group/option relative">
+                                {question.questionType === 'radio' ? <div className="w-4 h-4 rounded-full border border-muted-foreground/30 flex-shrink-0" /> : <div className="w-4 h-4 rounded border border-muted-foreground/30 flex-shrink-0" />}
                                 <input 
                                   value={option.label}
                                   onChange={(e) => handleUpdateOption(index, oIndex, e.target.value)}
-                                  className="flex-grow bg-transparent border-b border-transparent focus:border-border outline-none py-1 transition-all"
+                                  className="w-full bg-transparent border-b border-transparent focus:border-border outline-none py-1 transition-all text-sm sm:text-base pr-8"
                                 />
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
-                                  className="h-8 w-8 opacity-0 group-hover/option:opacity-100 text-muted-foreground hover:text-destructive"
+                                  className="h-8 w-8 absolute right-0 sm:opacity-0 group-hover/option:opacity-100 text-muted-foreground hover:text-destructive focus:opacity-100 transition-opacity"
                                   onClick={() => handleRemoveOption(index, oIndex)}
                                 >
                                   <Trash2 className="w-3 h-3" />
@@ -315,8 +323,8 @@ const FormEditor = () => {
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </Reorder.Item>
             ))}
           </Reorder.Group>
@@ -324,22 +332,23 @@ const FormEditor = () => {
           <motion.div 
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
+            className="w-full"
           >
             <Button 
               onClick={handleAddQuestion}
               variant="outline"
-              className="w-full py-10 border-dashed border-2 border-border hover:border-primary/50 hover:bg-primary/5 text-muted-foreground hover:text-primary transition-all rounded-2xl"
+              className="w-full py-8 sm:py-10 border-dashed border-2 border-border hover:border-primary/50 hover:bg-primary/5 text-muted-foreground hover:text-primary transition-all rounded-2xl md:rounded-3xl"
             >
               <div className="flex flex-col items-center gap-2">
-                <Plus className="w-8 h-8" />
-                <span className="font-bold text-lg">Add Question</span>
+                <Plus className="w-6 h-6 sm:w-8 sm:h-8" />
+                <span className="font-bold text-base sm:text-lg">Add Question</span>
               </div>
             </Button>
           </motion.div>
 
-          <Card className="bg-primary/5 border-none">
-            <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold flex items-center gap-2 text-primary">
+          <Card className="bg-card/90 backdrop-blur-sm border border-border/70 rounded-2xl md:rounded-3xl shadow-lg mt-6 md:mt-8">
+            <CardContent className="p-5 sm:p-6 md:p-8 space-y-4">
+              <h3 className="font-bold flex items-center gap-2 text-primary text-base sm:text-lg">
                 <Settings2 className="w-5 h-5" /> Settings
               </h3>
               <div className="space-y-4">
@@ -355,7 +364,7 @@ const FormEditor = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>

@@ -524,13 +524,6 @@ const Dashboard = () => {
       action: () => navigate("/manage-jobs"),
       colorClass: "from-red-500 to-red-600",
     },
-    {
-      title: "ShellForms",
-      description: "Build dynamic forms, surveys and collect data.",
-      icon: FileCheck,
-      action: () => navigate("/admin/forms"),
-      colorClass: "from-blue-600 to-indigo-700",
-    },
   ];
 
   // --- Render Sections ---

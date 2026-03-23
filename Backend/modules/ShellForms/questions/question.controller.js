@@ -3,6 +3,13 @@ const questionService = require("./question.service");
 class QuestionController {
 	async addQuestion(req, res) {
 		try {
+			if (Array.isArray(req.body)) {
+				const formId = req.params.formId || (req.body[0] && req.body[0].formId);
+				if (!formId) throw new Error("formId is required");
+				const questions = await questionService.bulkInsertQuestions(formId, req.body);
+				return res.status(201).json({ success: true, data: questions });
+			}
+
 			const questionData = {
 				...req.body,
 				formId: req.params.formId || req.body.formId,
