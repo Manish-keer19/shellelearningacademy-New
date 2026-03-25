@@ -6,7 +6,7 @@ const heroImageSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        cloudinaryPublicId: {
+        fileKey: {
             type: String,
             required: true,
         },

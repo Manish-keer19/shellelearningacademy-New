@@ -1,6 +1,7 @@
 const HeroImage = require("../models/HeroImage");
-const { uploadFileToCloudinary } = require("../utils/imageUploader");
-const cloudinary = require("cloudinary").v2;
+const { uploadFileInMinio, deleteFile } = require("../services/UploadMinIo");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 /**
  * PUBLIC: Get all active hero images for the Hero section slider
@@ -67,17 +68,20 @@ exports.uploadHeroImage = async (req, res) => {
 
         const imageFile = req.files.image;
 
-        // Upload to Cloudinary
-        const uploadResult = await uploadFileToCloudinary(
+        // Generate a unique key using UUID to avoid collisions
+        const ext = path.extname(imageFile.name || imageFile.originalname || ""); // Handle both file-upload and multer
+        const objectKey = `hero-images/${uuidv4()}${ext}`;
+
+        // Upload to MinIO
+        const uploadResult = await uploadFileInMinio(
             imageFile,
-            "ShellElearning/hero-images",
-            1080,
-            80
+            objectKey,
+            imageFile.mimetype
         );
 
         const heroImage = await HeroImage.create({
-            imageUrl: uploadResult.secure_url,
-            cloudinaryPublicId: uploadResult.public_id,
+            imageUrl: uploadResult.url,
+            fileKey: uploadResult.key,
             order: order ? parseInt(order) : 0,
             createdBy: req.user.id,
             isActive: true,
@@ -114,22 +118,27 @@ exports.updateHeroImage = async (req, res) => {
             });
         }
 
-        // Replace image on Cloudinary if a new file is provided
+        // Replace image on MinIO if a new file is provided
         if (req.files && req.files.image) {
             try {
-                await cloudinary.uploader.destroy(heroImage.cloudinaryPublicId);
+                if (heroImage.fileKey) {
+                    await deleteFile(heroImage.fileKey);
+                }
             } catch (cdErr) {
-                console.warn("Could not delete old Cloudinary image:", cdErr.message);
+                console.warn("Could not delete old MinIO image:", cdErr.message);
             }
 
-            const uploadResult = await uploadFileToCloudinary(
-                req.files.image,
-                "ShellElearning/hero-images",
-                1080,
-                80
+            const imageFile = req.files.image;
+            const ext = path.extname(imageFile.name || imageFile.originalname || "");
+            const objectKey = `hero-images/${uuidv4()}${ext}`;
+
+            const uploadResult = await uploadFileInMinio(
+                imageFile,
+                objectKey,
+                imageFile.mimetype
             );
-            heroImage.imageUrl = uploadResult.secure_url;
-            heroImage.cloudinaryPublicId = uploadResult.public_id;
+            heroImage.imageUrl = uploadResult.url;
+            heroImage.fileKey = uploadResult.key;
         }
 
         if (order !== undefined) heroImage.order = parseInt(order);
@@ -168,11 +177,13 @@ exports.deleteHeroImage = async (req, res) => {
             });
         }
 
-        // Delete from Cloudinary
+        // Delete from MinIO
         try {
-            await cloudinary.uploader.destroy(heroImage.cloudinaryPublicId);
+            if (heroImage.fileKey) {
+                await deleteFile(heroImage.fileKey);
+            }
         } catch (cdErr) {
-            console.warn("Could not delete Cloudinary image:", cdErr.message);
+            console.warn("Could not delete MinIO image:", cdErr.message);
         }
 
         await HeroImage.findByIdAndDelete(id);
